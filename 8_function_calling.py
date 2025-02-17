@@ -11,35 +11,29 @@ import os
 def main():
     client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-    # Create or load assistant
-    assistant_id = create_or_load_assistant(client)
+    assistant_id = create_or_load_assistant(client) # Create or load assistant
     print(f"Using assistant ID: {assistant_id}")
 
-    # Create a new thread
-    thread = client.beta.threads.create()
+    thread = client.beta.threads.create() # Create a new thread
     print(f"Thread created with ID: {thread.id}")
 
-    # Run a loop where the user can ask questions
-    while True:
+    while True: # Run a loop where the user can ask questions
         text = input("What's your question? (Type 'quit' to exit)\n")
         if text.lower() == 'quit':
             break
 
-        # Create a user message in the thread
-        user_message = client.beta.threads.messages.create(
+        user_message = client.beta.threads.messages.create( # Create a user message in the thread
             thread_id=thread.id,
             role="user",
             content=text
         )
 
-        # Run the assistant to get a response
-        run = client.beta.threads.runs.create(
+        run = client.beta.threads.runs.create( # Run the assistant to get a response
             thread_id=thread.id,
             assistant_id=assistant_id
         )
 
-        # Polling for the run status
-        i = 0
+        i = 0 # Polling for the run status
         while run.status not in ["completed", "failed", "requires_action"]:
             if i > 0:
                 time.sleep(5)
@@ -50,8 +44,7 @@ def main():
             i += 1
             print(run.status)
 
-        # Handle required actions
-        if run.status == "requires_action":
+        if run.status == "requires_action": # Handle required actions
             tools_to_call = run.required_action.submit_tool_outputs.tool_calls
             print(len(tools_to_call))
             print(tools_to_call)
@@ -67,7 +60,7 @@ def main():
                 print(f"Function to call: {function_name}")
                 print(f"Parameters to use: {function_args}")
 
-                # Call the perplexity_search function directly
+                # Handle the function calls
                 if function_name == "add":
                     output = add(function_args['a'], function_args['b'])
                 else: 
@@ -84,8 +77,7 @@ def main():
                 tool_outputs=tool_output_array
             )
 
-            # Check the run operation status again
-            i = 0
+            i = 0 # Check the run operation status again
             while run.status not in ["completed", "failed", "requires_action"]:
                 if i > 0:
                     time.sleep(10)
@@ -96,8 +88,7 @@ def main():
                 i += 1
                 print(run.status)
 
-        # Retrieve the assistant's response message
-        response_message = None
+        response_message = None # Retrieve the assistant's response message
         messages = client.beta.threads.messages.list(thread_id=thread.id).data
         for message in messages:
             if message.role == "assistant":

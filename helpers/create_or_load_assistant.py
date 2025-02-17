@@ -2,7 +2,6 @@ import os
 import json
 from tools.definitions.add_tool_definition import add_tool_definition
 
-# Function to create or load an assistant
 def create_or_load_assistant(client):
     assistant_file_path = "assistant.json"
     if os.path.exists(assistant_file_path):
@@ -11,11 +10,6 @@ def create_or_load_assistant(client):
             assistant_id = assistant_data["assistant_id"]
             print(f"Loaded existing assistant ID: {assistant_id}")
     else:
-
-        print()
-        print('add_tool_definition', add_tool_definition)
-        print()
-
         assistant = client.beta.assistants.create(
             instructions="You are a helpful assistant that can add 2 numbers using the special 'add' tool.",
             model="gpt-4-turbo",
