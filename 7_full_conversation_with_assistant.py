@@ -6,10 +6,8 @@ import os
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-#@markdown Enter the Assistant ID to use:
 assistant_id = "asst_8XaMCZ0jXistHLFdTEi2HKfo"
 
-#@markdown Enter the Vector Store ID to be used:
 vector_store_id = "vs_67b290c49ed08191876522f0882b837a"
 
 # Update the assistant with the vector store ID in the tool_resources
