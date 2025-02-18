@@ -12,7 +12,7 @@ def main():
     updated_assistant = client.beta.assistants.update(
         assistant_id=assistant_id,
         tools=[
-          # add_lead_to_spreadsheet_definition,
+          {"type": "file_search"},
           add_lead_to_google_sheet_tool_definition
         ],
     )
